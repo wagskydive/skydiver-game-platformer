@@ -1,0 +1,15 @@
+{
+  "name": "skydiver",
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "devDependencies": {
+    "typescript": "^4.0.0",
+    "vite": "^4.0.0"
+  },
+  "dependencies": {
+    "phaser": "^3.0.0"
+  }
+}
