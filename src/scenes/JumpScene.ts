@@ -1,30 +1,67 @@
 import Phaser from 'phaser';
 
 export class JumpScene extends Phaser.Scene {
+  private player!: Phaser.Physics.Arcade.Sprite;
+  private cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
+  private trickKey!: Phaser.Input.Keyboard.Key;
+  private combo = 0;
+  private tricking = false;
+  private comboTimer?: Phaser.Time.TimerEvent;
+
   constructor() {
     super({ key: 'JumpScene' });
   }
 
   preload() {
-    // e.g. this.load.image('skydiver', 'assets/sprites/skydiver.png');
+    // generate a simple square texture to represent the skydiver
+    const g = this.add.graphics();
+    g.fillStyle(0xffffff, 1);
+    g.fillRect(0, 0, 32, 32);
+    g.generateTexture('skydiver', 32, 32);
+    g.destroy();
   }
 
   create() {
-    const player = this.physics.add.sprite(400, 100, 'skydiver');
-    player.setCollideWorldBounds(true);
+    this.cursors = this.input.keyboard.createCursorKeys();
+    this.trickKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.X);
 
-    this.input.keyboard.on('keydown-SPACE', () => {
-      this.physics.world.gravity.y = 0;
+    this.player = this.physics.add.sprite(400, 100, 'skydiver');
+    this.player.setName('player');
+    this.player.setCollideWorldBounds(true);
+  }
+
+  private startTrick() {
+    this.tricking = true;
+    this.tweens.add({
+      targets: this.player,
+      angle: this.player.angle + 360,
+      duration: 300,
+      onComplete: () => {
+        this.tricking = false;
+        this.combo++;
+        if (this.comboTimer) this.comboTimer.remove(false);
+        this.comboTimer = this.time.addEvent({
+          delay: 2000,
+          callback: () => (this.combo = 0),
+        });
+        console.log(`Combo x${this.combo}`);
+      },
     });
   }
 
   update() {
-    const cursors = this.input.keyboard.createCursorKeys();
-    const player = this.children.getByName('player') as Phaser.Physics.Arcade.Sprite;
-    if (!player) return;
+    if (!this.player) return;
 
-    if (cursors.left.isDown)  player.setVelocityX(-200);
-    else if (cursors.right.isDown) player.setVelocityX(200);
-    else player.setVelocityX(0);
+    if (this.cursors.left?.isDown) this.player.setVelocityX(-200);
+    else if (this.cursors.right?.isDown) this.player.setVelocityX(200);
+    else this.player.setVelocityX(0);
+
+    if (this.cursors.down?.isDown) this.player.setAccelerationY(400);
+    else if (this.cursors.up?.isDown) this.player.setAccelerationY(-200);
+    else this.player.setAccelerationY(0);
+
+    if (Phaser.Input.Keyboard.JustDown(this.trickKey) && !this.tricking) {
+      this.startTrick();
+    }
   }
 }
