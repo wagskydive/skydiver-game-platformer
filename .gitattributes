@@ -1,1 +1,21 @@
-*.png binary
+# Track all image assets
+*.png filter=lfs diff=lfs merge=lfs -text
+*.jpg filter=lfs diff=lfs merge=lfs -text
+*.jpeg filter=lfs diff=lfs merge=lfs -text
+*.gif filter=lfs diff=lfs merge=lfs -text
+
+# Track audio files
+*.wav filter=lfs diff=lfs merge=lfs -text
+*.ogg filter=lfs diff=lfs merge=lfs -text
+*.mp3 filter=lfs diff=lfs merge=lfs -text
+
+# Track animation or sprite sheet data
+*.json filter=lfs diff=lfs merge=lfs -text
+
+# Optional: Track tilemaps or external level files
+*.tmx filter=lfs diff=lfs merge=lfs -text
+*.tsx filter=lfs diff=lfs merge=lfs -text
+
+# Optional: Unity or Godot scenes (if used later)
+*.unity filter=lfs diff=lfs merge=lfs -text
+*.tscn filter=lfs diff=lfs merge=lfs -text
