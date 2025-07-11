@@ -54,9 +54,10 @@ Keep future additions modular to allow easy expansion of scenes and mechanics.
 
 ## Build and Testing
 
-There are currently no automated tests. Before committing code, run the build to ensure TypeScript compiles:
+Automated tests are implemented using [Vitest](https://vitest.dev) with a simple Phaser mock. Always run the test suite and ensure the game builds before committing changes:
 
 ```bash
+npm test
 npm run build
 ```
 

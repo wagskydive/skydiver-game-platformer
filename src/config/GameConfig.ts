@@ -1,3 +1,5 @@
+import Phaser from 'phaser';
+
 export const GameConfig: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
   parent: 'game',

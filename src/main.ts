@@ -4,11 +4,11 @@ import { MainMenuScene } from './scenes/MainMenuScene';
 import { PopupScene } from './scenes/PopupScene';
 import { GameConfig } from './config/GameConfig';
 
-const config: Phaser.Types.Core.GameConfig = {
+export const gameConfig: Phaser.Types.Core.GameConfig = {
   ...GameConfig,
   scene: [ MainMenuScene, JumpScene, PopupScene ],
 };
 
 window.addEventListener('load', () => {
-  new Phaser.Game(config);
+  new Phaser.Game(gameConfig);
 });
