@@ -1,10 +1,12 @@
 import Phaser from 'phaser';
 import { JumpScene } from './scenes/JumpScene';
+import { MainMenuScene } from './scenes/MainMenuScene';
+import { PopupScene } from './scenes/PopupScene';
 import { GameConfig } from './config/GameConfig';
 
 const config: Phaser.Types.Core.GameConfig = {
   ...GameConfig,
-  scene: [ JumpScene ],
+  scene: [ MainMenuScene, JumpScene, PopupScene ],
 };
 
 window.addEventListener('load', () => {

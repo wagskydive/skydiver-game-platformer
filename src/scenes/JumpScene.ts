@@ -6,6 +6,8 @@ export class JumpScene extends Phaser.Scene {
   private landingText!: Phaser.GameObjects.Text;
   private cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
   private trickKey!: Phaser.Input.Keyboard.Key;
+  private countdownText!: Phaser.GameObjects.Text;
+  private controlsEnabled = false;
   private inCanopy = false;
   private landed = false;
   private targetX = 400;
@@ -46,6 +48,38 @@ export class JumpScene extends Phaser.Scene {
     this.landingZone.setOrigin(0.5, 1);
 
     this.landingText = this.add.text(400, 20, '', { color: '#000', fontSize: '16px' }).setOrigin(0.5, 0);
+
+    this.startCountdown();
+  }
+
+  private startCountdown() {
+    const { width, height } = this.scale;
+    const sequence = ['3', '2', '1', 'Go!'];
+    let index = 0;
+
+    this.physics.world.pause();
+    this.countdownText = this.add.text(width / 2, height / 2, sequence[index], {
+      fontSize: '64px',
+      color: '#000',
+    }).setOrigin(0.5);
+    index++;
+
+    this.time.addEvent({
+      delay: 1000,
+      repeat: sequence.length - 1,
+      callback: () => {
+        if (index < sequence.length) {
+          this.countdownText.setText(sequence[index]);
+          index++;
+        } else {
+          this.countdownText.destroy();
+        }
+      },
+      onComplete: () => {
+        this.physics.world.resume();
+        this.controlsEnabled = true;
+      },
+    });
   }
 
   private startTrick() {
@@ -69,6 +103,7 @@ export class JumpScene extends Phaser.Scene {
 
   update() {
     if (!this.player) return;
+    if (!this.controlsEnabled) return;
 
     // transition to canopy phase automatically after a certain height
     if (!this.inCanopy && this.player.y > 300) {
@@ -109,13 +144,16 @@ export class JumpScene extends Phaser.Scene {
     if (this.inCanopy && !this.landed && this.player.body.blocked.down) {
       this.landed = true;
       const dist = Math.abs(this.player.x - this.targetX);
+      let message: string;
       if (dist < 20) {
-        this.landingText.setText('Bullseye! Bonus +50');
+        message = 'Bullseye! Bonus +50';
       } else if (dist < 50) {
-        this.landingText.setText('Nice Landing +20');
+        message = 'Nice Landing +20';
       } else {
-        this.landingText.setText('Hard Landing');
+        message = 'Hard Landing';
       }
+      this.landingText.setText(message);
+      this.scene.launch('PopupScene', { message: message + '\nClick to continue' });
     }
   }
 }
