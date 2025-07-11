@@ -2,6 +2,11 @@
 
 This project is a small Phaser prototype built with TypeScript and Vite.
 
+## Gameplay Features
+- Freefall and canopy phases with basic controls
+- Rings to collect for points and updrafts to catch extra lift
+- Score tracking displayed during play
+
 ## Prerequisites
 - Node.js (version 18 or later)
 - npm
