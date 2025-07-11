@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+// Completed: init-project
 import { JumpScene } from './scenes/JumpScene';
 import { MainMenuScene } from './scenes/MainMenuScene';
 import { PopupScene } from './scenes/PopupScene';
