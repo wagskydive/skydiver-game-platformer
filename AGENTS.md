@@ -1,71 +1,62 @@
-# Development Guide for OpenAI Codex
+# AGENTS.md
 
-This file provides detailed instructions for contributors and AI agents working with the **Skydiver Platformer** project. Use it as the main reference for coding standards, file organization, and development workflow.
+## 🧠 Codex AI Development Agents – Skydiver Platformer Project
 
-## Repository Overview
+This document defines the roles and scopes of Codex agents in our game development process. Each agent assists with a specific part of the project.
 
-```
-/ (root)
-├── public/           # Static assets served by Vite
-│   └── index.html    # HTML entry point
-├── src/              # TypeScript game source code
-│   ├── scenes/       # Phaser scenes (MainMenuScene, JumpScene, PopupScene)
-│   ├── config/       # Shared configuration and constants
-│   └── main.ts       # Game bootstrap
-├── DESIGN.md         # Game design document
-├── AGENTS.md         # This guide
-├── package.json      # npm scripts and dependencies
-└── vite.config.ts    # Vite build configuration
-```
+---
 
-All gameplay logic should reside in `src/`. Static assets such as images and audio will eventually be placed under an `assets/` directory as outlined in `DESIGN.md`.
+## 🔄 Agent Reporting & Task Check-off
 
-## Coding Conventions
+Each Codex Agent is responsible for marking their assigned tasks as complete once implemented. This should be done in `CODING_PROMPTS.md` using:
 
-- **Language:** Use **TypeScript** for all source files.
-- **Engine:** Phaser 3. Scenes should extend `Phaser.Scene`.
-- **Style:** Follow the existing formatting in the repository. Use semicolons and camelCase variable names.
-- **Scene Files:** Place each scene in `src/scenes/` and name using `PascalCaseScene.ts` (e.g., `JumpScene.ts`).
-- **Game Config:** Shared configuration lives in `src/config/`. Export settings as plain objects.
-- **Sprites & Audio:** When adding assets, follow the naming convention from `DESIGN.md`, e.g. `hero_idle.png`, `music_loop_chiptune.ogg`.
-- **Comments:** Add comments for complex logic or calculations, especially physics and timing code.
+- [x] Task complete  
+- [ ] Task incomplete
 
-## Design Guidelines from `DESIGN.md`
+Agents should:
+1. Check off completed items in `CODING_PROMPTS.md`
+2. Add a brief comment with the filename or function where it was implemented
+3. Include `// Completed: [task-id]` in code where applicable
 
-When implementing new features, ensure they align with the design document:
+---
 
-1. **Freefall Phase**
-   - Support horizontal steering (Left/Right or A/D), diving (Down), and flaring (Up).
-   - Include trick mechanics (`X` key) with combo multipliers.
-   - Rings and air currents should provide score or boosts.
-2. **Canopy Phase**
-   - Continue using steering keys, with Space/Up for flaring and Down for quick dives.
-   - Implement precision landing on a target zone.
-3. **Parachute Packing Minigame** (planned)
-   - Display a button/timing sequence. Failure should affect the next jump's starting score.
-4. **Progression Systems** (planned)
-   - Points convert to in-game currency for gear upgrades (helmets, suits, rigs, canopies) and skill tree bonuses.
-5. **Hub World** (planned)
-   - Top-down dropzone with NPCs, shops, and leaderboards.
-6. **Art Style**
-   - Use 32×32 pixel sprites and a limited color palette. Animations should be exaggerated and humorous.
+## 🤖 Autonomous Execution
 
-Keep future additions modular to allow easy expansion of scenes and mechanics.
+Agents must:
+- Read `CODING_PROMPTS.md`
+- Identify the **first unchecked task**
+- Complete it in full
+- Check it off
+- Comment the work with `// Completed: [task-id]`
+- Log which file was updated and what changed
 
-## Build and Testing
+---
 
-Automated tests are implemented using [Vitest](https://vitest.dev) with a simple Phaser mock. Always run the test suite and ensure the game builds before committing changes:
+## 📋 Agents Overview
 
-```bash
-npm test
-npm run build
-```
+### GameLogicAgent
+Implements all gameplay behavior and scene flow.
 
-## Pull Request Requirements
+### AssetManagerAgent
+Handles asset loading, registration, and animation.
 
-- Describe the feature or fix in detail.
-- Reference sections of `DESIGN.md` that your changes implement or modify.
-- Ensure `npm run build` completes without errors.
-- Keep PRs focused on one feature or bugfix.
+### TestAgent
+Creates test cases, debug overlays, and visual validators.
 
+### LevelDesignerAgent
+Generates tilemaps, object placements, and parallax setups.
 
+### DocsAgent
+Maintains all documentation, usage guides, and changelogs.
+
+---
+
+## ✅ Agent Access Matrix
+
+| Agent               | Can Edit Code | Can Read Assets | Can Write Docs |
+|--------------------|----------------|------------------|----------------|
+| GameLogicAgent      | ✅             | ✅               | ✅             |
+| AssetManagerAgent   | ✅             | ✅               | ✅             |
+| TestAgent           | ✅             | ✅               | ✅             |
+| LevelDesignerAgent  | ✅             | ✅               | ✅             |
+| DocsAgent           | ❌             | ✅               | ✅             |
