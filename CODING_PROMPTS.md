@@ -7,8 +7,8 @@ Each task has an ID. Codex should automatically pick the first `[ ]` item, compl
 
 ## ✅ SETUP & INIT
 
-- [ ] **ID: init-project**  
-      Set up a Phaser 3 + TypeScript + Vite project using `skydiver-boilerplate`. Include `main.ts`, `GameConfig.ts`, and `JumpScene`.
+- [x] **ID: init-project**
+      Set up a Phaser 3 + TypeScript + Vite project using `skydiver-boilerplate`. Include `main.ts`, `GameConfig.ts`, and `JumpScene`. (src/main.ts)
 
 - [ ] **ID: load-test-sprite**  
       Load a test sprite and render it at the canvas center using Arcade physics. Add left/right movement.
