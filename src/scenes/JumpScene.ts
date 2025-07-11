@@ -4,6 +4,7 @@ export class JumpScene extends Phaser.Scene {
   private player!: Phaser.Physics.Arcade.Sprite;
   private landingZone!: Phaser.GameObjects.Rectangle;
   private landingText!: Phaser.GameObjects.Text;
+  private scoreText!: Phaser.GameObjects.Text;
   private cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
   private trickKey!: Phaser.Input.Keyboard.Key;
   private countdownText!: Phaser.GameObjects.Text;
@@ -11,9 +12,13 @@ export class JumpScene extends Phaser.Scene {
   private inCanopy = false;
   private landed = false;
   private targetX = 400;
+  private score = 0;
   private combo = 0;
   private tricking = false;
   private comboTimer?: Phaser.Time.TimerEvent;
+
+  private rings!: Phaser.Physics.Arcade.StaticGroup;
+  private currents!: Phaser.Physics.Arcade.StaticGroup;
 
   constructor() {
     super({ key: 'JumpScene' });
@@ -33,6 +38,20 @@ export class JumpScene extends Phaser.Scene {
     canopy.fillRect(0, 0, 40, 20);
     canopy.generateTexture('canopy', 40, 20);
     canopy.destroy();
+
+    // ring texture
+    const ring = this.add.graphics();
+    ring.lineStyle(2, 0xffff00);
+    ring.strokeCircle(16, 16, 14);
+    ring.generateTexture('ring', 32, 32);
+    ring.destroy();
+
+    // updraft texture
+    const up = this.add.graphics();
+    up.fillStyle(0x00ffff, 0.6);
+    up.fillRect(0, 0, 60, 10);
+    up.generateTexture('updraft', 60, 10);
+    up.destroy();
   }
 
   create() {
@@ -48,6 +67,26 @@ export class JumpScene extends Phaser.Scene {
     this.landingZone.setOrigin(0.5, 1);
 
     this.landingText = this.add.text(400, 20, '', { color: '#000', fontSize: '16px' }).setOrigin(0.5, 0);
+
+    this.scoreText = this.add.text(10, 10, 'Score: 0', {
+      color: '#000',
+      fontSize: '16px',
+    });
+
+    // rings to fly through
+    this.rings = this.physics.add.staticGroup();
+    for (let i = 1; i <= 3; i++) {
+      const ring = this.rings.create(Phaser.Math.Between(100, 700), i * 150, 'ring');
+      ring.setCircle(14, 1, 1);
+    }
+
+    // updraft currents
+    this.currents = this.physics.add.staticGroup();
+    const current = this.currents.create(Phaser.Math.Between(100, 700), 450, 'updraft');
+    current.setSize(60, 10);
+
+    this.physics.add.overlap(this.player, this.rings, this.collectRing, undefined, this);
+    this.physics.add.overlap(this.player, this.currents, this.hitCurrent, undefined, this);
 
     this.startCountdown();
   }
@@ -99,6 +138,16 @@ export class JumpScene extends Phaser.Scene {
         console.log(`Combo x${this.combo}`);
       },
     });
+  }
+
+  private collectRing(_player: Phaser.GameObjects.GameObject, ring: Phaser.GameObjects.GameObject) {
+    ring.destroy();
+    this.score += 10;
+    this.scoreText.setText(`Score: ${this.score}`);
+  }
+
+  private hitCurrent() {
+    this.player.setVelocityY(-200);
   }
 
   update() {
@@ -153,7 +202,9 @@ export class JumpScene extends Phaser.Scene {
         message = 'Hard Landing';
       }
       this.landingText.setText(message);
-      this.scene.launch('PopupScene', { message: message + '\nClick to continue' });
+      this.scene.launch('PopupScene', {
+        message: `${message}\nScore: ${this.score}\nClick to continue`,
+      });
     }
   }
 }
